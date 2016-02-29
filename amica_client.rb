@@ -21,7 +21,7 @@ class AmicaClient < FoodClient
     if current_menus['Date'] == "#{@date}T00:00:00"
       current_menus['SetMenus'].each do |menu|
         name = menu['Name']
-        next if ['FRESH BUFFET', 'STREET GOURMET', 'JUST FOR YOU', 'KEITTOLOUNAS'].include?(name.try(:upcase))
+        next if name != nil && ['FRESH BUFFET', 'STREET GOURMET', 'JUST FOR YOU', 'KEITTOLOUNAS'].include?(name.upcase)
         @menus.push( menu['Components'].map { |name| clean_name(name) }.join(', '))
       end
     end
