@@ -21,9 +21,11 @@ class DylanClient < FoodClient
     actual_menus = current.inner_html.split('<br>')[1..-1]
     @menus = actual_menus.map do |text|
       text = text.split('/').first
-      text = text.sub(' g', '')
-      text = text.sub(' l,g', '')
-      text
+      extras = ['l,g', 'l', 'g']
+      extras.each do |extra|
+        text = text.sub(" #{extra}", '')
+      end
+      text.strip
     end
   end
 end
