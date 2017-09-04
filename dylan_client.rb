@@ -1,20 +1,15 @@
-require 'bundler/setup'
-Bundler.require
-
-require_relative 'food_client'
-
 class DylanClient < FoodClient
   
   def initialize(restaurant, date = Date.today)
     @date = date
-    @restaurant_name = restaurant
+    @restaurant_name = "Dylan #{restaurant}"
     @restaurant_url = "https://www.dylan.fi/#{restaurant}-lunch-menu/"
     load_menus
   end
   
   def load_menus
     @menus = []
-    page = Nokogiri::HTML(File.read('index.html'))
+    page = Nokogiri::HTML(RestClient.get(restaurant_url))
     container = page.css('.sqs-block-html .sqs-block-content').first
     return unless container
     items = container.css('p.text-align-center')
@@ -32,6 +27,3 @@ class DylanClient < FoodClient
     end
   end
 end
-
-c = DylanClient.new('lepuski', Date.parse('2017-09-01'))
-puts c.menus
