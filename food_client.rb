@@ -14,11 +14,15 @@ class FoodClient
       menu_items = '> No menu available'
     end
 
-    data = {
-      text: "<#{restaurant_url}|#{restaurant_name}>\n" + menu_items
-    }
+    if ENV['FOOD_DEBUG']
+      puts "#{restaurant_name}\n#{menu_items}"
+    else
+      data = {
+        text: "<#{restaurant_url}|#{restaurant_name}>\n" + menu_items
+      }
 
-    RestClient.post webhook, data.to_json, content_type: :json
+      RestClient.post webhook, data.to_json, content_type: :json
+    end
   end
   
 end

@@ -9,7 +9,14 @@ class DylanClient < FoodClient
   
   def load_menus
     @menus = []
-    page = Nokogiri::HTML(RestClient.get(restaurant_url))
+    content = RestClient.get(restaurant_url).body.force_encoding('utf-8')
+    regex = Regexp.new('\<body.*\<\/body\>', Regexp::IGNORECASE | Regexp::MULTILINE)
+    if (matches = regex.match(content))
+      content = matches[0]
+    else
+      return
+    end
+    page = Nokogiri::HTML(content)
     container = page.css('.sqs-block-html .sqs-block-content').first
     return unless container
     items = container.css('p.text-align-center')
@@ -20,12 +27,8 @@ class DylanClient < FoodClient
     return unless current
     actual_menus = current.inner_html.split('<br>')[1..-1]
     @menus = actual_menus.map do |text|
-      text = text.split('/').first
-      extras = ['l,g', 'l', 'g']
-      extras.each do |extra|
-        text = text.sub(" #{extra}", '')
-      end
-      text.strip
+      text = text.split('/').first.strip
+      text.gsub(/ [a-z](,[a-z])*\z/, '')
     end
   end
 end
