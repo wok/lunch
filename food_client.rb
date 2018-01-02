@@ -15,7 +15,7 @@ class FoodClient
     end
 
     if ENV['FOOD_DEBUG']
-      puts "#{restaurant_name}\n#{menu_items}"
+      puts "#{restaurant_name} #{restaurant_url}\n#{menu_items}"
     else
       data = {
         text: "<#{restaurant_url}|#{restaurant_name}>\n" + menu_items
@@ -23,6 +23,19 @@ class FoodClient
 
       RestClient.post webhook, data.to_json, content_type: :json
     end
+  end
+
+  def local_weekday
+    weekdays = %w[Suununtai Maanantai Tiistai Keskiviikko Torstai Perjantai Lauantai]
+    weekdays[date.wday]
+  end
+
+  def load_menus_with_rescue
+    load_menus
+  rescue StandardError => e
+    puts e.message
+    puts e.backtrace
+    @menus = [e.message]
   end
   
 end

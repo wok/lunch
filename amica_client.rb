@@ -5,12 +5,11 @@ class AmicaClient < FoodClient
       quartetto_plus: 3114,
       gongi: 3110
     }
-    @restaurant_id = restaurants[restaurant] || restaurant
+    @restaurant_id = restaurants[restaurant.to_sym]
     @date = date
-    load_menu
   end
 
-  def load_menu
+  def load_menus
     response = RestClient.get(url(@restaurant_id, @date))
     data = JSON.parse(response.body)
     @restaurant_name = data['RestaurantName']

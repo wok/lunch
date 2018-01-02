@@ -4,7 +4,6 @@ class DylanClient < FoodClient
     @date = date
     @restaurant_name = "Dylan #{restaurant}"
     @restaurant_url = "https://www.dylan.fi/#{restaurant}-lunch-menu/"
-    load_menus
   end
   
   def load_menus
