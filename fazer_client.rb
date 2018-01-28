@@ -20,15 +20,14 @@ class FazerClient < FoodClient
     items = doc.css('p')
     today = local_weekday
     @menus = []
-    items.each_with_index do |item, index|
-      if item.css('strong') && item.css('strong').text.include?(today)
-        actual_menus = items[index+1].inner_html.split('<br>')[1..-1]
-        actual_menus.each do |menu|
-          menu = menu.strip
-          next if menu == '' || menu.include?('strong')
-          menu = menu.gsub(/ \(.*\)/, '')
-          @menus.push(menu)
-        end
+    items.each do |item|
+      rows = item.inner_html.split('<br>')
+      day = rows[0]
+      next unless day.include?(today)
+      rows[1..-1].each do |row|
+        row = row.gsub(/\(.*/, '').strip
+        next if row == ''
+        @menus.push(row)
       end
     end
   end
