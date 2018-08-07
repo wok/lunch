@@ -1,5 +1,5 @@
 # lunch
-Fetch lunch list from Dylan and Amica and post to slack
+Fetch lunch list from Dylan, Amica, Tastory and post to slack
 
 # Installation
 
