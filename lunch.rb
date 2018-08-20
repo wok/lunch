@@ -6,13 +6,13 @@ Bundler.require
 require_relative 'food_client'
 require_relative 'amica_client'
 require_relative 'dylan_client'
+require_relative 'tastory_client'
 require_relative 'fazer_client'
 
 clients = [
-  FazerClient.new('q4a'),
+  TastoryClient.new('q4a'),
   DylanClient.new('lepuski'),
-  AmicaClient.new('quartetto_plus'),
-  AmicaClient.new('gongi')
+  AmicaClient.new('quartetto_plus')
 ]
 
 clients.each do |client|

@@ -26,7 +26,7 @@ class FoodClient
   end
 
   def local_weekday
-    weekdays = %w[Suununtai Maanantai Tiistai Keskiviikko Torstai Perjantai Lauantai]
+    weekdays = %w[Sunnuntai Maanantai Tiistai Keskiviikko Torstai Perjantai Lauantai]
     weekdays[date.wday]
   end
 
