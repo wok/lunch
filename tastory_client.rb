@@ -7,7 +7,8 @@ class TastoryClient < FoodClient
       q4a: 215599
     }
     @restaurant_id = restaurants[restaurant.to_sym]
-    @restaurant_name = "Tastory"
+    @restaurant_name = "Tastory #{restaurant}"
+    @restaurant_url = "http://www.tastory.fi/ravintolat/ravintolat-kaupungeittain/espoo/#{restaurant}/"
     @date = date
   end
 
