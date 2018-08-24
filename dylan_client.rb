@@ -15,19 +15,28 @@ class DylanClient < FoodClient
     else
       return
     end
+    content = content.gsub('&nbsp;', '').gsub('&shy;', '')
     page = Nokogiri::HTML(content)
-    container = page.css('.sqs-block-html .sqs-block-content').first
-    return unless container
-    items = container.css('p.text-align-center')
-    current = items.detect do |item|
-      title = item.css('strong')
-      title && title.text.include?(date.strftime('%-d.%-m.'))
+    lines = []
+    page.css('.sqs-block-html .sqs-block-content').xpath('//p').each do |section|
+      next if section.inner_html.start_with?('<a target=')
+      lines = lines + section.inner_html.split('<br>')
     end
-    return unless current
-    actual_menus = current.inner_html.split('<br>')[1..-1]
-    @menus = actual_menus.map do |text|
-      text = text.split('/').first.strip
-      text.gsub(/ [a-z](,[a-z])*\z/, '')
+    
+    # find current day
+    is_current = false
+    day_lines = []
+    lines.each do |line|
+      if line.start_with?('<strong>')
+        is_current = line.start_with?("<strong>#{local_weekday}")
+      else
+        day_lines.push(line&.gsub('&nbsp;', '')) if is_current
+      end
+    end
+    @menus = []
+    day_lines.each do |line|
+      line = line.split('/').first&.strip&.gsub('<\/em>', '')&.gsub('<em>', '')&.gsub('<', '')
+      @menus.push(line) unless line.nil? || line.length <= 5
     end
   end
 end

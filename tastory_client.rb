@@ -4,7 +4,7 @@ class TastoryClient < FoodClient
   
   def initialize(restaurant, date = Date.today)
     restaurants = {
-      q4a: 3115
+      q4a: 215599
     }
     @restaurant_id = restaurants[restaurant.to_sym]
     @date = date
@@ -13,22 +13,16 @@ class TastoryClient < FoodClient
   def load_menus
     response = RestClient.get(url(@restaurant_id, @date))
     data = JSON.parse(response.body)
-    @restaurant_name = data['RestaurantName']
-    @restaurant_url = data['RestaurantUrl']
-
-    current_menus = data['MenusForDays'].first
+    page = Nokogiri::HTML(data['LunchMenu']['Html'].gsub('&nbsp;', ' '))
     @menus = []
-    if current_menus['Date'] == "#{@date}T00:00:00"
-      current_menus['SetMenus'].each do |menu|
-        name = menu['Name']
-        next if !name.nil? && ['FRESH BUFFET', 'STREET GOURMET', 'JUST FOR YOU', 'KEITTOLOUNAS'].include?(name.upcase)
-        @menus.push(menu['Components'].map { |food_name| clean_name(food_name) }.join(', '))
-      end
+    page.xpath('//p').each do |item|
+      next if item.content.strip == '' || item.content == local_weekday
+      @menus.push(item.content)
     end
   end
   
   def url(restaurant_id, date)
-    "http://www.tastory.fi/modules/json/json/Index?costNumber=#{restaurant_id}&firstDay=#{date}&lastDay=#{date}&language=fi"
+    "http://www.tastory.fi/api/restaurant/menu/day?date=#{date}&language=fi&restaurantPageId=#{restaurant_id}"
   end
   
   def clean_name(name)
