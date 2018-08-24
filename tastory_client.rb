@@ -7,6 +7,7 @@ class TastoryClient < FoodClient
       q4a: 215599
     }
     @restaurant_id = restaurants[restaurant.to_sym]
+    @restaurant_name = "Tastory"
     @date = date
   end
 
