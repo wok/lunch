@@ -35,7 +35,6 @@ class FoodCoClient < FoodClient
   end
 
   def url(restaurant_id, date)
-    puts "https://www.fazerfoodco.fi/modules/json/json/Index?costNumber=#{restaurant_id}&firstDay=#{date}&lastDay=#{date}&language=fi"
     "https://www.fazerfoodco.fi/modules/json/json/Index?costNumber=#{restaurant_id}&firstDay=#{date}&lastDay=#{date}&language=fi"
   end
 

@@ -1,20 +1,16 @@
 class FoodClient
   require 'json'
   require 'yaml'
-  
+
   attr_accessor :restaurant_name
   attr_accessor :restaurant_url
   attr_accessor :menus
   attr_accessor :date
-  
+
   def post_to_slack
     webhook = ENV['FOOD_SLACK_URL']
 
-    if menus.any?
-      menu_items = menus.map { |n| "> #{n}" }.join("\n")
-    else
-      menu_items = '> No menu available'
-    end
+    menu_items = menus.any? ? menus.map { |n| "> #{n}" }.join("\n") : '> No menu available'
 
     if ENV['FOOD_DEBUG']
       puts "#{restaurant_name} #{restaurant_url}\n#{menu_items}"
@@ -26,13 +22,9 @@ class FoodClient
       RestClient.post webhook, data.to_json, content_type: :json
     end
   end
-  
+
   def to_stdout
-    if menus.any?
-      menu_items = menus.map { |n| "> #{n}" }.join("\n")
-    else
-      menu_items = '> No menu available'
-    end
+    menu_items = menus.any? ? menus.map { |n| "> #{n}" }.join("\n") : '> No menu available'
 
     if ENV['FOOD_DEBUG']
       puts "#{restaurant_name} #{restaurant_url}\n#{menu_items}"
@@ -57,5 +49,4 @@ class FoodClient
     puts e.backtrace
     @menus = [e.message]
   end
-  
 end
