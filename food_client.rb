@@ -1,5 +1,7 @@
 class FoodClient
-
+  require 'json'
+  require 'yaml'
+  
   attr_accessor :restaurant_name
   attr_accessor :restaurant_url
   attr_accessor :menus
@@ -22,6 +24,24 @@ class FoodClient
       }
 
       RestClient.post webhook, data.to_json, content_type: :json
+    end
+  end
+  
+  def to_stdout
+    if menus.any?
+      menu_items = menus.map { |n| "> #{n}" }.join("\n")
+    else
+      menu_items = '> No menu available'
+    end
+
+    if ENV['FOOD_DEBUG']
+      puts "#{restaurant_name} #{restaurant_url}\n#{menu_items}"
+    else
+      data = {
+        text: "<#{restaurant_url}|#{restaurant_name}>\n" + menu_items
+      }
+
+      puts data.to_yaml
     end
   end
 
