@@ -1,5 +1,3 @@
-require 'json'
-
 class TastoryClient < FoodClient
   
   def initialize(restaurant, date = Date.today)
