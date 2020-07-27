@@ -26,7 +26,5 @@ class DylanClient < FoodClient
 
       @menus = cell.css('p span span').text.split("\n")
     end
-
-    puts @menus
   end
 end
