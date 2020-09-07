@@ -21,10 +21,9 @@ class DylanClient < FoodClient
 
     @menus = []
     container.xpath('//div[@role="gridcell"]').each do |cell|
-      day = cell.css('h4').first&.text
-      next unless day&.start_with?(local_weekday)
-
-      @menus = cell.css('p span span').text.split("\n")
+      rows = cell.css('p').map(&:text)
+      next unless rows&.first&.start_with?(local_weekday)
+      @menus = rows.drop(1).select{ |row| row.strip.length > 1 }
     end
   end
 end

@@ -24,7 +24,7 @@ class FoodCoClient < FoodClient
       'Fresh buffet-salaatti',
       'Jälkiruoka'
     ]
-    return unless current_menus['Date'] == "#{@date}T00:00:00"
+    return unless current_menus && current_menus['Date'] == "#{@date}T00:00:00"
 
     current_menus['SetMenus'].each do |menu|
       name = menu['Name']

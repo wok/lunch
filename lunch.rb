@@ -7,12 +7,13 @@ require_relative 'food_client'
 require_relative 'food_co_client'
 require_relative 'dylan_client'
 require_relative 'tastory_client'
-# require_relative 'fazer_client'
+require_relative 'bad_client'
 
 clients = [
   TastoryClient.new('q4a'),
   DylanClient.new('lepuski'),
-  FoodCoClient.new('quartetto_plus'),
+  BadClient.new,
+  # FoodCoClient.new('quartetto_plus'),
   # FoodCoClient.new('gongi')
 ]
 
