@@ -1,29 +1,22 @@
 class DylanClient < FoodClient
   
-  def initialize(restaurant, date = Date.today)
+  URL = 'https://europe-west1-luncher-7cf76.cloudfunctions.net/api/v1/week/7e401791-d472-4ddb-bb11-bcdb9191ca92/active'
+
+  def initialize(date = Date.today)
     @date = date
-    @restaurant_name = "Dylan #{restaurant}"
-    @restaurant_url = "https://www.dylan.fi/#{restaurant}"
+    @restaurant_name = "Dylan"
+    @restaurant_url = "https://www.dylan.fi/lepuski"
   end
   
   def load_menus
     @menus = []
-    content = RestClient.get(restaurant_url).body.force_encoding('utf-8')
-    regex = Regexp.new('\<body.*\<\/body\>', Regexp::IGNORECASE | Regexp::MULTILINE)
-    if (matches = regex.match(content))
-      content = matches[0]
-    else
-      return
-    end
-    content = content.gsub('&nbsp;', '').gsub('&shy;', '')
-    page = Nokogiri::HTML(content)
-    container = page.at('//div[contains(.//span, "LOUNAS")]').next
-
-    @menus = []
-    container.xpath('//div[@role="gridcell"]').each do |cell|
-      rows = cell.css('p').map(&:text)
-      next unless rows&.first&.start_with?(local_weekday)
-      @menus = rows.drop(1).select{ |row| row.strip.length > 1 }
+    days = JSON.parse(RestClient.get(URL).body).dig('data', 'week', 'days')
+    today = days.find { |day| DateTime.parse(day['date']).to_date == date }
+    if today
+      today.dig('lunches').each do |lunch|
+        type = lunch['lunchType']
+        @menus.push(lunch.dig('title', 'fi'))
+      end
     end
   end
 end
