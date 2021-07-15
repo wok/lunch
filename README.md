@@ -6,7 +6,7 @@ Fetch lunch list from Dylan, Food & Co, Tastory and post to slack
 ## Create user
 
 ```
-useradd -m foodagent
+useradd -s /bin/bash -m foodagent
 ```
 
 ## Download source
