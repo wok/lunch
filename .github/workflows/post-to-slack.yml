@@ -1,8 +1,8 @@
 name: post-to-slack
 on:
-  push:
+  workflow_dispatch:
   schedule:
-    - cron: "0 11 * * 1-5"
+    - cron: "0 8 * * 1-5"
 
 jobs:
   post:
