@@ -11,7 +11,7 @@ require_relative 'tastory_client'
 clients = [
   TastoryClient.new('q4a'),
   DylanClient.new,
-  # FoodCoClient.new('quartetto_plus'),
+  FoodCoClient.new('quartetto_plus'),
   # FoodCoClient.new('gongi')
 ]
 

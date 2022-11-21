@@ -2,20 +2,26 @@ class FoodCoClient < FoodClient
   
   def initialize(restaurant, date = Date.today)
     restaurants = {
-      quartetto_plus: 3114,
-      gongi: 3110
+      quartetto_plus: {
+        id: 262191,
+        url: 'https://www.foodandco.fi/ravintolat/Ravintolat-kaupungeittain/espoo/quartetto-plus/',
+        name: 'Quartetto Plus'
+      }
     }
-    @restaurant_id = restaurants[restaurant.to_sym]
+    @restaurant_id = restaurants[restaurant.to_sym][:id]
+    @restaurant_name = restaurants[restaurant.to_sym][:name]
+    @restaurant_url = restaurants[restaurant.to_sym][:url]
     @date = date
   end
 
   def load_menus
     response = RestClient.get(url(@restaurant_id, @date))
     data = JSON.parse(response.body)
-    @restaurant_name = data['RestaurantName']
-    @restaurant_url = data['RestaurantUrl']
+    puts date.strftime('%d.%m.%Y')
 
-    current_menus = data['MenusForDays'].first
+    day_menus = data.dig('LunchMenus').find { |day| day['Date'] == date.strftime('%d.%m.%Y')}
+    return unless day_menus
+
     @menus = []
     menu_types = [
       'Vegaaninen kasvislounas',
@@ -24,18 +30,16 @@ class FoodCoClient < FoodClient
       'Fresh buffet-salaatti',
       'Jälkiruoka'
     ]
-    return unless current_menus && current_menus['Date'] == "#{@date}T00:00:00"
 
-    current_menus['SetMenus'].each do |menu|
-      name = menu['Name']
-      next if name != nil && menu_types.include?(name.upcase)
-
-      @menus.push( menu['Components'].map { |dish| clean_name(dish) }.join(', '))
+    day_menus['SetMenus'].each do |menu|
+      next unless menu['Name']
+      items = menu['Meals'].map{ |item| item['Name'] }
+      @menus.push(items.join(', '))
     end
   end
 
   def url(restaurant_id, date)
-    "https://www.fazerfoodco.fi/modules/json/json/Index?costNumber=#{restaurant_id}&firstDay=#{date}&lastDay=#{date}&language=fi"
+    "https://www.foodandco.fi/api/restaurant/menu/week?language=fi&restaurantPageId=262191&weekDate=#{date}"
   end
 
   def clean_name(name)
