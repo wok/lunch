@@ -7,12 +7,12 @@ require_relative 'food_client'
 require_relative 'food_co_client'
 require_relative 'dylan_client'
 require_relative 'tastory_client'
+require_relative 'compass_client'
 
 clients = [
-  TastoryClient.new('q4a'),
+  CompassClient.new('q4a'),
   DylanClient.new,
-  FoodCoClient.new('quartetto_plus'),
-  # FoodCoClient.new('gongi')
+  CompassClient.new('quartetto_plus')
 ]
 
 clients.each do |client|
